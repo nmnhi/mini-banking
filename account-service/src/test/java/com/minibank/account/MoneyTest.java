@@ -33,7 +33,7 @@ class MoneyTest {
 
   @Test
   void constructor_zeroAmount_isAllowed() {
-    assertThat(new Money(0, "VND").getAmount()).isZero();
+    assertThat(new Money(0, "VND").amount()).isZero();
   }
 
   @Test
@@ -103,5 +103,18 @@ class MoneyTest {
   @Test
   void toString_returnsAmountAndCurrency() {
     assertThat(new Money(100, "VND")).hasToString("100 VND");
+  }
+
+  @Test
+  void isLessThan_comparesAmountWithSameCurrency() {
+    assertThat(new Money(30, "VND").isLessThan(new Money(100, "VND"))).isTrue();
+    assertThat(new Money(100, "VND").isLessThan(new Money(100, "VND"))).isFalse();
+  }
+
+  @Test
+  void isLessThan_differentCurrency_throwsIllegalArgumentException() {
+    assertThatThrownBy(() -> new Money(30, "VND").isLessThan(new Money(100, "USD")))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Currency must match");
   }
 }
