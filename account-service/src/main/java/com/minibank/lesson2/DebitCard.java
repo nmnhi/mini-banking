@@ -59,6 +59,10 @@ public class DebitCard {
     spentToday = spentToday + amount;
   }
 
+  public void resetDailySpending() {
+    spentToday = 0;
+  }
+
   private void requireNotBelowSpentToday(long dailyLimit) {
     if (dailyLimit < spentToday) {
       throw new IllegalArgumentException("You cannot set daily limit less than spent today");
