@@ -59,21 +59,13 @@ public class Main {
 
     // 3. Open/Closed: a new fee policy plugs in without touching TransferService
     System.out.println();
-    System.out.println("=== 3. New VIP policy added without changing TransferService ===");
-    TransferFeePolicy vipPolicy = new TransferFeePolicy() {
-      @Override
-      public long calculate(long amount) {
-        return 1_000;
-      }
-
-      @Override
-      public String type() {
-        return "VIP";
-      }
-    };
-    transfer("VIP 1,000,000 CHK-001 -> STU-001 (flat fee 1,000)",
-        smsService, bobChk, lanStu, 1_000_000, vipPolicy,
+    System.out.println("=== 3. New QR policy added without changing TransferService ===");
+    transfer("QR 1,000,000 CHK-001 -> STU-001 (flat fee 1,000)",
+        smsService, bobChk, lanStu, 1_000_000, new QrFeePolicy(),
         1_499_000, 1_500_000);
+    transfer("QR 10,000 STU-001 -> SAV-001 (fee stays 1,000 regardless of amount)",
+        emailService, lanStu, aliceSav, 10_000, new QrFeePolicy(),
+        1_489_000, 38_506_700);
   }
 
   private static void transfer(String scenario, TransferService service, Account from, Account to,

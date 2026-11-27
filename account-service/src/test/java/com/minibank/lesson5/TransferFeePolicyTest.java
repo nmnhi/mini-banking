@@ -25,6 +25,16 @@ class TransferFeePolicyTest {
   }
 
   @Test
+  void qr_chargesFlatFeeRegardlessOfAmount() {
+    QrFeePolicy policy = new QrFeePolicy();
+
+    assertThat(policy.calculate(1)).isEqualTo(1_000);
+    assertThat(policy.calculate(10_000)).isEqualTo(1_000);
+    assertThat(policy.calculate(50_000_000)).isEqualTo(1_000);
+    assertThat(policy.type()).isEqualTo("QR");
+  }
+
+  @Test
   void swift_belowThreshold_chargesMinimumFee() {
     SwiftFeePolicy policy = new SwiftFeePolicy();
 

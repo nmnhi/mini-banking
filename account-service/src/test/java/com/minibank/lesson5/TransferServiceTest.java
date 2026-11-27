@@ -115,25 +115,15 @@ class TransferServiceTest {
   }
 
   @Test
-  void transfer_newPolicy_worksWithoutChangingService() {
-    TransferFeePolicy vip = new TransferFeePolicy() {
-      @Override
-      public long calculate(long amount) {
-        return 1_000;
-      }
-
-      @Override
-      public String type() {
-        return "VIP";
-      }
-    };
+  void transfer_qrPolicy_worksWithoutChangingService() {
     Account from = accountOf("A-1", alice, 1_000_000);
     Account to = accountOf("B-1", bob, 0);
 
-    service.transfer(from, to, 100_000, vip);
+    service.transfer(from, to, 100_000, new QrFeePolicy());
 
     assertThat(from.getBalance()).isEqualTo(899_000);
-    assertThat(audit.entries).containsExactly("SUCCESS VIP A-1 B-1 100000 1000");
+    assertThat(to.getBalance()).isEqualTo(100_000);
+    assertThat(audit.entries).containsExactly("SUCCESS QR A-1 B-1 100000 1000");
   }
 
   @Test
