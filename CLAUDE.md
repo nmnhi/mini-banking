@@ -73,3 +73,7 @@ javac -d /tmp/out account-service/src/main/java/com/minibank/lesson4/*.java && j
   Hướng đã chốt: thiếu tiền = tình huống nghiệp vụ → khóa tài khoản + ghi nợ, nạp tiền thì trừ nợ rồi mở khóa;
   job try/catch từng account và trả về tổng kết `Processed / Suspended / Failed`.
   Bước tiếp: mình gửi 4–5 câu hỏi làm rõ cho Claude (đóng vai PO) → chốt acceptance criteria → code.
+- **Chống chuyển tiền trùng khi app retry** (từ bonus ACC-05, hợp với Bài 14–16 – Concurrency): app mất response
+  rồi gửi lại → `transfer()` chạy 2 lần, trừ tiền 2 lần. Hướng đúng: client sinh **idempotency key** cho mỗi lần
+  bấm "Chuyển"; server lưu key → kết quả; trùng key đã xong → trả lại kết quả cũ; trùng key đang chạy → 409.
+  (Lock theo tài khoản không đủ: retry tới sau khi lần 1 xong vẫn lọt, và chặn nhầm 2 giao dịch hợp lệ.)
